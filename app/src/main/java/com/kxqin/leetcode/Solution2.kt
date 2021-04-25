@@ -1,9 +1,5 @@
 package com.kxqin.leetcode
 
-import android.util.Log
-import java.lang.StringBuilder
-import java.util.*
-
 
 /**
  * @author KIDD
@@ -12,77 +8,33 @@ import java.util.*
  */
 class Solution2 {
 
-    private val stack1 = Stack<Int>()
-    private val stack2 = Stack<Int>()
-    private val resultNode = ListNode(0)
-
     fun addTwoNumbers(l1: ListNode?, l2: ListNode?): ListNode {
-        getNumber(l1, stack1)
-        getNumber(l2, stack2)
-        val num1 = caculatNum(stack1)
-        val num2 = caculatNum(stack2)
-        val result = num1 + num2
-        getStack(result)
-        return resultNode
-    }
-
-    /**
-     * 将节点转化为栈存储
-     */
-    private fun getNumber(node: ListNode?, stack: Stack<Int>) {
-        if (node != null) {
-            stack.add(node.value)
-            if (node.next != null) {
-                getNumber(node.next, stack)
-            }
+        val result = ListNode(0)
+        var temp1: ListNode? = l1
+        var temp2: ListNode? = l2
+        var tempResult: ListNode? = result
+        //进位
+        var carry = 0
+        //不为空或者有进位
+        while (temp1 != null || temp2 != null || carry != 0) {
+            val temp1Value = temp1?.`val`?:0
+            val temp2Value = temp2?.`val`?:0
+            //当前相加结果
+            val sum = temp1Value + temp2Value + carry
+            //新的进位
+            carry = sum / 10
+            val newNode = ListNode(sum % 10)
+            tempResult?.next = newNode
+            //重新设置temp节点，进行下一轮计算
+            tempResult = newNode
+            temp1 = temp1?.next
+            temp2 = temp2?.next
         }
+        //返回初始节点的next即是结果的根节点
+        return result.next!!
     }
 
-    /**
-     * 将栈里数据取出来
-     */
-    private fun caculatNum(stack: Stack<Int>): Int {
-        val stringBuilder = StringBuilder()
-        for (item in stack) {
-            stringBuilder.append("$item")
-        }
-        return stringBuilder.toString().toInt()
-
-    }
-
-    /**
-     * 将计算结果用栈存储
-     */
-    private fun getStack(num: Int) {
-        val string = "$num"
-        val array = string.toCharArray().toList()
-        val stack3 = Stack<Int>()
-        for (item in array) {
-            stack3.add(item.toInt())
-        }
-        getListNode(stack3, resultNode)
-    }
-
-    private fun getListNode(stack: Stack<Int>, listNode: ListNode) {
-        if (stack.isNotEmpty()) {
-            listNode.value = stack.pop()
-            if (stack.isNotEmpty()) {
-                listNode.next = ListNode(0)
-                getListNode(stack, listNode.next!!)
-            }
-        }
-
-    }
-
-    class ListNode(var value: Int) {
-        var next: ListNode? = null
-    }
 }
-
-fun main() {
-    val listNode1 = Solution2.ListNode(2)
-    val listNode2 = Solution2.ListNode(1)
-    listNode1.next = listNode2
-    val listnode3 = Solution2().addTwoNumbers(listNode1, listNode1)
-    Log.d("KIDD", listnode3.toString())
+class ListNode(var `val`: Int) {
+    var next: ListNode? = null
 }
