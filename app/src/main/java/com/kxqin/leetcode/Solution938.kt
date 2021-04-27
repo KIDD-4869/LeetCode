@@ -26,9 +26,10 @@ class Solution938 {
         //如果以上条件不符合，即当前节点值在区间之间，那么左子树和右子树都需要再计算。
         return root.`val` + rangeSumBST(root.left, low, high) + rangeSumBST(root.right, low, high)
     }
+
+    class TreeNode(var `val`: Int) {
+        var left: TreeNode? = null
+        var right: TreeNode? = null
+    }
 }
 
-class TreeNode(var `val`: Int) {
-    var left: TreeNode? = null
-    var right: TreeNode? = null
-}
